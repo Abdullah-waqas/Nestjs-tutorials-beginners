@@ -12,6 +12,7 @@ export class DatabaseModule {
 
   public static getConnectionOptions(config: ConfigService, dbconfig: DbConfig): TypeOrmModuleOptions {
     const dbdata = config.get().db;
+    console.log('*********')
     console.log(config);
     let connectionOptions: TypeOrmModuleOptions;
 
@@ -23,13 +24,13 @@ export class DatabaseModule {
           connectionOptions = this.getConnectionOptionsMysql(dbdata);
           break;
           default:
-            throw new NotImplementedException(`Database type '${dbdata.type}' not supported`);  
+            throw new NotImplementedException(`Database type '${dbdata.type}' not supported`);
       }
     return {
         ...connectionOptions,
         entities: dbconfig.entities,
         logging: true,
-      }; 
+      };
   }
   private static getConnectionOptionsSqlite(dbdata: any): TypeOrmModuleOptions {
     throw new NotImplementedException(`Database type '${dbdata.type}' not supported`);

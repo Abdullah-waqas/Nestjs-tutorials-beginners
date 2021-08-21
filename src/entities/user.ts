@@ -12,7 +12,7 @@ import {
 import Comment from './Comment';
 import Post from './Post';
 
-@Entity()
+@Entity({ name: 'user' })
 @Unique(['username'])
 export class User {
   @PrimaryGeneratedColumn()

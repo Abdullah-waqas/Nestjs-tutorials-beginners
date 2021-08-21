@@ -11,26 +11,50 @@ import { validate } from 'class-validator';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectRepository(User) private userRepo: Repository<User>) {}
+  constructor(
+    @InjectRepository(User) private userRepo: Repository<User>,
+  ) { }
 
-  // user register 
+  // user register
   async create(userDTO: RegisterDTO): Promise<User> {
     try {
-    const { username, password } = userDTO;
-    const user = await this.userRepo.findOne({ username });
-    if (user) {
-      throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
+      const { username, password } = userDTO;
+      const user = await this.userRepo.findOne({ username });
+      if (user) {
+        throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
+      }
+      const newUser = new User();
+      newUser.username = username;
+      newUser.password = password;
+      /*const errors = await validate(newUser);
+      if(errors && errors.length > 0){
+        throw new BadRequestException(errors);
+      } */
+      newUser.hashPassword();
+      return await this.userRepo.save(newUser);
+    } catch (err) {
+      throw new BadRequestException(err);
     }
-    const newUser = new User();
-    newUser.username = username;
-    newUser.password = password;
-    /*const errors = await validate(newUser);
-    if(errors && errors.length > 0){
-      throw new BadRequestException(errors);
-    } */
-    newUser.hashPassword();
-    return await this.userRepo.save(newUser);
-    }catch(err){
+  }
+
+  // admin register
+  async createAdmin(userDTO: RegisterDTO): Promise<User> {
+    try {
+      const { username, password } = userDTO;
+      const user = await this.userRepo.findOne({ username });
+      if (user) {
+        throw new HttpException('Admin already exists', HttpStatus.BAD_REQUEST);
+      }
+      const newUser = new User();
+      newUser.username = username;
+      newUser.password = password;
+      /*const errors = await validate(newUser);
+      if(errors && errors.length > 0){
+        throw new BadRequestException(errors);
+      } */
+      newUser.hashPassword();
+      return await this.userRepo.save(newUser);
+    } catch (err) {
       throw new BadRequestException(err);
     }
   }
@@ -42,9 +66,9 @@ export class UserService {
         throw new HttpException('User does not exist in system', HttpStatus.UNAUTHORIZED);
       }
       return user;
-      }catch(err){
-        throw new UnauthorizedException(err);
-      }
+    } catch (err) {
+      throw new UnauthorizedException(err);
+    }
   }
 
   async findByLogin(userDTO: LoginDTO) {
@@ -61,7 +85,7 @@ export class UserService {
   }
 
   sanitizeUser(user: User) {
-    const obj = {... user};
+    const obj = { ...user };
     delete obj['password'];
     return obj;
   }

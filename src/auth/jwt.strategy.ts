@@ -12,11 +12,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
     async validate(payload: any, done: VerifyCallback) {
         try {
-            const user = await this.authservice.validateUser(payload);
-            if (!user) {
-                return done(new HttpException('Unauthorized access', HttpStatus.UNAUTHORIZED), null)
-            }
-            return done(null, payload);
+            // const user = await this.authservice.validateUser(payload);
+            // if (!user) {
+            //     return done(new HttpException('Unauthorized access', HttpStatus.UNAUTHORIZED), null)
+            // }
+            return done(null, { ...payload, test: 'abc' });
         } catch (err) {
             throw new HttpException('Unauthorized access', HttpStatus.UNAUTHORIZED)
         }

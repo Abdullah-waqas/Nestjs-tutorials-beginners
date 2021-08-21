@@ -21,7 +21,7 @@ class Category {
   @Column()
   @IsNotEmpty()
   public category: string;
- 
+
   @OneToOne(() => Post, post => post.category)
   public post: Post;
 
