@@ -3,10 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { CreateAppointmentDTO, LoginUserDTO, RegisterUserDTO, UpdateAppointmentDTO } from '../auth/auth.dto';
 import { Repository } from 'typeorm';
-import Doctor from 'src/entities/Doctor';
-
-import { from, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import Users from 'src/entities/Users';
 import Roles from 'src/entities/Roles';
 import UsersPermission from 'src/entities/UsersPermission';
@@ -37,10 +33,6 @@ export class UsersService {
             newUser.password = password;
             newUser.isActive = false;
             newUser.roleId = roleId;
-            /*const errors = await validate(newUser);
-            if(errors && errors.length > 0){
-              throw new BadRequestException(errors);
-            } */
             newUser.hashPassword();
             return await this.usersRepo.save(newUser);
         } catch (err) {

@@ -5,11 +5,6 @@ import { getManager } from 'typeorm';
 import { AssignPermissionDTO, LoginAdminDTO, RegisterAdminDTO } from '../auth/auth.dto';
 import { Repository } from 'typeorm';
 import SuperAdmin from '../entities/SuperAdmin';
-import { from, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import Doctor from 'src/entities/Doctor';
-import Staff from 'src/entities/Staff';
-import Patient from 'src/entities/Patient';
 import Users from 'src/entities/Users';
 import UsersPermission from 'src/entities/UsersPermission';
 
@@ -18,9 +13,6 @@ export class SuperAdminService {
   constructor(
     @InjectRepository(SuperAdmin) private adminRepo: Repository<SuperAdmin>,
     @InjectRepository(Users) private usersRepo: Repository<Users>,
-    @InjectRepository(Doctor) private doctorRepo: Repository<Doctor>,
-    @InjectRepository(Staff) private staffRepo: Repository<Staff>,
-    @InjectRepository(Patient) private patientRepo: Repository<Patient>,
     @InjectRepository(UsersPermission) private usersPermissionRepo: Repository<UsersPermission>
   ) { }
 
@@ -48,18 +40,6 @@ export class SuperAdminService {
       throw new BadRequestException(err);
     }
   }
-
-  // async findByUserName(username: string): Promise<User> {
-  //   try {
-  //     const user = await this.adminRepo.findOne({ username });
-  //     if (user) {
-  //       throw new HttpException('User does not exist in system', HttpStatus.UNAUTHORIZED);
-  //     }
-  //     return user;
-  //     }catch(err){
-  //       throw new UnauthorizedException(err);
-  //     }
-  // }
 
   async findByLogin(userDTO: LoginAdminDTO) {
     const { firstName, lastName, password } = userDTO;
@@ -126,70 +106,13 @@ export class SuperAdminService {
     }
   }> {
     try {
-      // const [doctors, patients, staff] = await [
-      //   await this.doctorRepo.query('Select id, firstName, lastName, address, isActive from doctor'),
-      //   await this.patientRepo.query('Select id, firstName, lastName, address, isActive from patient'),
-      //   await this.staffRepo.query('Select id, firstName, lastName, address, isActive from staff'),
-      // ];
-      // return { patients, doctors, staff };
       const entityManager = getManager();
       const users = await entityManager.query('  select users.id, users.roleId, users.firstName, users.lastName, roles.type, users.address, users.isActive from users LEFT join roles on users.roleId = roles.id');
-      console.log('//////////');
-      console.log(users);
       return users;
     } catch (err) {
       throw new BadRequestException(err);
     }
   }
-
-  // async getAllUsers(): Promise<{
-  //   patients: {
-  //     id: number,
-  //     firstName: string,
-  //     lastName: string,
-  //     address: string,
-  //     isActive: number
-  //   },
-  //   doctors: {
-  //     id: number,
-  //     firstName: string,
-  //     lastName: string,
-  //     address: string,
-  //     isActive: number
-  //   },
-  //   staff: {
-  //     id: number,
-  //     firstName: string,
-  //     lastName: string,
-  //     address: string,
-  //     isActive: number
-  //   }
-  // }> {
-  //   try {
-  //     // const [doctors, patients, staff] = await [
-  //     //   await this.doctorRepo.query('Select id, firstName, lastName, address, isActive from doctor'),
-  //     //   await this.patientRepo.query('Select id, firstName, lastName, address, isActive from patient'),
-  //     //   await this.staffRepo.query('Select id, firstName, lastName, address, isActive from staff'),
-  //     // ];
-  //     // return { patients, doctors, staff };
-  //     const users = await this.doctorRepo.query('  select users.id, users.roleId, users.firstName, users.lastName, roles.type, users.address, users.isActive from users LEFT join roles on users.roleId = roles.id')
-  //     console.log('//////////')
-  //     console.log(users);
-  //     return users;
-  //   } catch (err) {
-  //     throw new BadRequestException(err);
-  //   }
-  // }
-
-
-  // findOne(id: number): Observable<any> {
-  //   return from(this.adminRepo.findOne({ id })).pipe(
-  //     map((user: any) => {
-  //       const { password, ...result } = user;
-  //       return result;
-  //     })
-  //   )
-  // }
 
   findOne(id: number): Promise<any> {
     return this.adminRepo.findOne({ id })

@@ -7,7 +7,6 @@ import { AppointmentGuard } from 'src/guards/Appointment.guard';
 import { SuperAdminService } from 'src/shared/SuperAdmin.service';
 import { UsersService } from 'src/shared/Users.service';
 
-import { UserService } from '../shared/user.service';
 import { LoginAdminPayload, Payload } from '../types/payload';
 import {
   ActivateUserParamDTO,
@@ -15,11 +14,9 @@ import {
   CreateAppointmentDTO,
   DeleteAppointmentParamDTO,
   LoginAdminDTO,
-  LoginDTO,
   LoginUserDTO,
   PermissionsEnum,
   RegisterAdminDTO,
-  RegisterDTO,
   RegisterUserDTO,
   UpdateAppointmentDTO
 } from './auth.dto';
@@ -28,27 +25,10 @@ import { AuthService } from './auth.service';
 @Controller('auth')
 export class AuthController {
   constructor(
-    private userService: UserService,
     private authService: AuthService,
     private superAdminService: SuperAdminService,
     private usersService: UsersService,
   ) { }
-
-  @Post('login')
-  async login(@Body() userDTO: LoginDTO) {
-    const user = await this.userService.findByLogin(userDTO);
-    const payload: Payload = {
-      username: user.username
-    };
-    const token = await this.authService.signPayload(payload);
-    return { token };
-  }
-
-  @Post('register')
-  async register(@Body() userDTO: RegisterDTO) {
-    const user = await this.userService.create(userDTO);
-    return { 'message': 'user created successfully' };
-  }
 
   // Superadmin
   @Post('register/admin')

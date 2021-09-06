@@ -1,6 +1,3 @@
-import { StaffPermission } from './StaffPermission';
-import { DoctorPermission } from './DoctorPermission';
-import { PatientPermission } from './PatientPermission';
 import {
     Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn
 } from 'typeorm';
@@ -24,20 +21,20 @@ export class Permissions {
     public updatedAt: Date;
 
 
-    @OneToMany(() => PatientPermission, (patientPermission: PatientPermission) => patientPermission.permission, {
-        onDelete: 'CASCADE',
-    })
-    patientPermissions: Array<PatientPermission>;
+    // @OneToMany(() => PatientPermission, (patientPermission: PatientPermission) => patientPermission.permission, {
+    //     onDelete: 'CASCADE',
+    // })
+    // patientPermissions: Array<PatientPermission>;
 
-    @OneToMany(() => DoctorPermission, (patientPermission: DoctorPermission) => patientPermission.permission, {
-        onDelete: 'CASCADE',
-    })
-    doctorPermissions: Array<DoctorPermission>;
+    // @OneToMany(() => DoctorPermission, (patientPermission: DoctorPermission) => patientPermission.permission, {
+    //     onDelete: 'CASCADE',
+    // })
+    // doctorPermissions: Array<DoctorPermission>;
 
-    @OneToMany(() => StaffPermission, (staffPermission: StaffPermission) => staffPermission.permission, {
-        onDelete: 'CASCADE',
-    })
-    staffPermissions: Array<StaffPermission>;
+    // @OneToMany(() => StaffPermission, (staffPermission: StaffPermission) => staffPermission.permission, {
+    //     onDelete: 'CASCADE',
+    // })
+    // staffPermissions: Array<StaffPermission>;
 
 }
 
