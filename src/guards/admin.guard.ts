@@ -21,7 +21,6 @@ export class AdminGuard implements CanActivate {
             if (result) {
                 return true;
             }
-
             return false;
         }
 

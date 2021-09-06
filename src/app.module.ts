@@ -22,6 +22,12 @@ import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './auth/auth.module';
 import { AuthController } from './post/post.controller';
 
+import PermissionsEntity from './entities/Permissions';
+import RolesEntity from './entities/Roles';
+import UsersEntity from './entities/Users';
+import UsersAppointmentEntity from './entities/UsersAppointment';
+import UsersPermissionEntity from './entities/UsersPermission';
+
 @Module({
   imports: [
     DatabaseModule.forRoot({
@@ -39,7 +45,13 @@ import { AuthController } from './post/post.controller';
         DoctorPermissionEntity,
         StaffPermissionEntity,
         PatientPermissionEntity,
-        AppointmentEntity
+        AppointmentEntity,
+
+        PermissionsEntity,
+        RolesEntity,
+        UsersEntity,
+        UsersAppointmentEntity,
+        UsersPermissionEntity,
       ]
     }),
     AuthModule,

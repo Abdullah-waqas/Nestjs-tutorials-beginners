@@ -1,5 +1,7 @@
 import { MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm';
+import Roles from './..//entities/Roles';
 import { Permission } from './../entities/Permission';
+import { Permissions } from './../entities/Permissions';
 
 
 export class InitializeTables1603533304850 implements MigrationInterface {
@@ -10,6 +12,60 @@ export class InitializeTables1603533304850 implements MigrationInterface {
             { id: 14, type: 'view_appointment' },
             { id: 15, type: 'delete_appointment' },
         ];
+
+        const permissionList1 = [
+            { id: 122, type: 'create_appointment' },
+            { id: 132, type: 'update_appointment' },
+            { id: 142, type: 'view_appointment' },
+            { id: 152, type: 'delete_appointment' },
+        ];
+
+        const rolesList = [
+            { id: 121, type: 'PATIENT' },
+            { id: 131, type: 'DOCTOR' },
+            { id: 141, type: 'STAFF' },
+        ];
+        await queryRunner.createTable(
+            new Table({
+                name: 'roles',
+                columns: [
+                    {
+                        name: 'id',
+                        type: 'int',
+                        isPrimary: true,
+                        isNullable: false,
+                        isGenerated: true,
+                        generationStrategy: 'increment',
+                    },
+                    {
+                        name: 'type',
+                        type: 'character varying',
+                        isUnique: true,
+                        isNullable: false,
+                        length: '255',
+                    },
+                    {
+                        name: 'createdAt',
+                        type: 'TIMESTAMP',
+                        isNullable: false,
+                        default: 'CURRENT_TIMESTAMP',
+                    },
+                    {
+                        name: 'updatedAt',
+                        type: 'TIMESTAMP',
+                        isNullable: false,
+                        default: 'CURRENT_TIMESTAMP',
+                    },
+                ],
+            }),
+        );
+        await queryRunner.manager
+            .createQueryBuilder()
+            .insert()
+            .into(Roles)
+            .values(rolesList)
+            .execute();
+
         await queryRunner.createTable(
             new Table({
                 name: 'permission',
@@ -49,6 +105,47 @@ export class InitializeTables1603533304850 implements MigrationInterface {
             .insert()
             .into(Permission)
             .values(permissionList)
+            .execute();
+
+        await queryRunner.createTable(
+            new Table({
+                name: 'permissions',
+                columns: [
+                    {
+                        name: 'id',
+                        type: 'int',
+                        isPrimary: true,
+                        isNullable: false,
+                        isGenerated: true,
+                        generationStrategy: 'increment',
+                    },
+                    {
+                        name: 'type',
+                        type: 'character varying',
+                        isUnique: true,
+                        isNullable: false,
+                        length: '255',
+                    },
+                    {
+                        name: 'createdAt',
+                        type: 'TIMESTAMP',
+                        isNullable: false,
+                        default: 'CURRENT_TIMESTAMP',
+                    },
+                    {
+                        name: 'updatedAt',
+                        type: 'TIMESTAMP',
+                        isNullable: false,
+                        default: 'CURRENT_TIMESTAMP',
+                    },
+                ],
+            }),
+        );
+        await queryRunner.manager
+            .createQueryBuilder()
+            .insert()
+            .into(Permissions)
+            .values(permissionList1)
             .execute();
 
         await queryRunner.createTable(
@@ -132,6 +229,73 @@ export class InitializeTables1603533304850 implements MigrationInterface {
                         isUnique: true,
                         isNullable: false,
                         length: '255',
+                    },
+                    {
+                        name: 'createdAt',
+                        type: 'TIMESTAMP',
+                        isNullable: false,
+                        default: 'CURRENT_TIMESTAMP',
+                    },
+                    {
+                        name: 'updatedAt',
+                        type: 'TIMESTAMP',
+                        isNullable: false,
+                        default: 'CURRENT_TIMESTAMP',
+                    },
+                ],
+            }),
+        );
+
+        await queryRunner.createTable(
+            new Table({
+                name: 'users',
+                columns: [
+                    {
+                        name: 'id',
+                        type: 'int',
+                        isPrimary: true,
+                        isNullable: false,
+                        isGenerated: true,
+                        generationStrategy: 'increment',
+                    },
+                    {
+                        name: 'roleId',
+                        type: 'int',
+                        isNullable: false,
+                    },
+                    {
+                        name: 'firstName',
+                        type: 'character varying',
+                        isUnique: true,
+                        isNullable: false,
+                        length: '50',
+                    },
+                    {
+                        name: 'lastName',
+                        type: 'character varying',
+                        isUnique: true,
+                        isNullable: false,
+                        length: '50',
+                    },
+                    {
+                        name: 'password',
+                        type: 'character varying',
+                        isUnique: true,
+                        isNullable: false,
+                        length: '255',
+                    },
+                    {
+                        name: 'address',
+                        type: 'character varying',
+                        isUnique: false,
+                        isNullable: false,
+                        length: '100',
+                    },
+                    {
+                        name: 'isActive',
+                        type: 'BOOLEAN',
+                        isNullable: false,
+                        isUnique: false,
                     },
                     {
                         name: 'createdAt',
@@ -337,7 +501,39 @@ export class InitializeTables1603533304850 implements MigrationInterface {
 
         await queryRunner.createTable(
             new Table({
-                name: 'patient_permission',
+                name: 'users_permission',
+                columns: [
+                    {
+                        name: 'id',
+                        type: 'int',
+                        isPrimary: true,
+                        isNullable: false,
+                        isGenerated: true,
+                        generationStrategy: 'increment',
+                    },
+                    {
+                        name: 'userId',
+                        type: 'int',
+                        isNullable: true,
+                    },
+                    {
+                        name: 'permissionId',
+                        type: 'int',
+                        isNullable: true,
+                    },
+                ],
+            }),
+        );
+
+        
+
+        
+
+        
+
+        await queryRunner.createTable(
+            new Table({
+                name: 'users_appointment',
                 columns: [
                     {
                         name: 'id',
@@ -353,61 +549,38 @@ export class InitializeTables1603533304850 implements MigrationInterface {
                         isNullable: true,
                     },
                     {
-                        name: 'permissionId',
-                        type: 'int',
-                        isNullable: true,
-                    },
-                ],
-            }),
-        );
-
-        await queryRunner.createTable(
-            new Table({
-                name: 'staff_permission',
-                columns: [
-                    {
-                        name: 'id',
-                        type: 'int',
-                        isPrimary: true,
-                        isNullable: false,
-                        isGenerated: true,
-                        generationStrategy: 'increment',
-                    },
-                    {
-                        name: 'staffId',
-                        type: 'int',
-                        isNullable: true,
-                    },
-                    {
-                        name: 'permissionId',
-                        type: 'int',
-                        isNullable: true,
-                    },
-                ],
-            }),
-        );
-
-        await queryRunner.createTable(
-            new Table({
-                name: 'doctor_permission',
-                columns: [
-                    {
-                        name: 'id',
-                        type: 'int',
-                        isPrimary: true,
-                        isNullable: false,
-                        isGenerated: true,
-                        generationStrategy: 'increment',
-                    },
-                    {
                         name: 'doctorId',
                         type: 'int',
                         isNullable: true,
                     },
                     {
-                        name: 'permissionId',
+                        name: 'createdBy',
                         type: 'int',
                         isNullable: true,
+                    },
+                    {
+                        name: 'appointmentStartDate',
+                        type: 'TIMESTAMP',
+                        isNullable: false,
+                        default: 'CURRENT_TIMESTAMP',
+                    },
+                    {
+                        name: 'appointmentEndDate',
+                        type: 'TIMESTAMP',
+                        isNullable: false,
+                        default: 'CURRENT_TIMESTAMP',
+                    },
+                    {
+                        name: 'createdAt',
+                        type: 'TIMESTAMP',
+                        isNullable: false,
+                        default: 'CURRENT_TIMESTAMP',
+                    },
+                    {
+                        name: 'updatedAt',
+                        type: 'TIMESTAMP',
+                        isNullable: false,
+                        default: 'CURRENT_TIMESTAMP',
                     },
                 ],
             }),
@@ -448,7 +621,13 @@ export class InitializeTables1603533304850 implements MigrationInterface {
                         length: '100',
                     },
                     {
-                        name: 'appointmentDate',
+                        name: 'appointmentStartDate',
+                        type: 'TIMESTAMP',
+                        isNullable: false,
+                        default: 'CURRENT_TIMESTAMP',
+                    },
+                    {
+                        name: 'appointmentEndDate',
                         type: 'TIMESTAMP',
                         isNullable: false,
                         default: 'CURRENT_TIMESTAMP',
@@ -489,64 +668,68 @@ export class InitializeTables1603533304850 implements MigrationInterface {
             }),
         );
 
-        // Permission
+        // UsersAppointment
         await queryRunner.createForeignKey(
-            'doctor_permission',
+            'users_appointment',
             new TableForeignKey({
                 columnNames: ['doctorId'],
-                referencedTableName: 'doctor',
+                referencedTableName: 'users',
                 referencedColumnNames: ['id'],
                 onDelete: 'CASCADE',
                 onUpdate: 'NO ACTION',
             }),
         );
         await queryRunner.createForeignKey(
-            'patient_permission',
+            'users_appointment',
             new TableForeignKey({
                 columnNames: ['patientId'],
-                referencedTableName: 'patient',
+                referencedTableName: 'users',
                 referencedColumnNames: ['id'],
                 onDelete: 'CASCADE',
                 onUpdate: 'NO ACTION',
             }),
         );
         await queryRunner.createForeignKey(
-            'staff_permission',
+            'users_appointment',
             new TableForeignKey({
-                columnNames: ['staffId'],
-                referencedTableName: 'staff',
+                columnNames: ['createdBy'],
+                referencedTableName: 'users',
                 referencedColumnNames: ['id'],
                 onDelete: 'CASCADE',
                 onUpdate: 'NO ACTION',
             }),
         );
 
-        // Permissionlist
+
+        // Permission
         await queryRunner.createForeignKey(
-            'doctor_permission',
+            'users_permission',
             new TableForeignKey({
-                columnNames: ['permissionId'],
-                referencedTableName: 'permission',
+                columnNames: ['userId'],
+                referencedTableName: 'users',
                 referencedColumnNames: ['id'],
                 onDelete: 'CASCADE',
                 onUpdate: 'NO ACTION',
             }),
         );
+        // UsersPermissionlist
         await queryRunner.createForeignKey(
-            'patient_permission',
+            'users_permission',
             new TableForeignKey({
                 columnNames: ['permissionId'],
-                referencedTableName: 'permission',
+                referencedTableName: 'permissions',
                 referencedColumnNames: ['id'],
                 onDelete: 'CASCADE',
                 onUpdate: 'NO ACTION',
             }),
         );
+
+        // roles
         await queryRunner.createForeignKey(
-            'staff_permission',
+            'users',
             new TableForeignKey({
-                columnNames: ['permissionId'],
-                referencedTableName: 'permission',
+                columnNames: ['roleId'],
+                referencedTableName: 'roles',
                 referencedColumnNames: ['id'],
                 onDelete: 'CASCADE',
                 onUpdate: 'NO ACTION',
@@ -556,14 +739,27 @@ export class InitializeTables1603533304850 implements MigrationInterface {
 
     public async down(queryRunner: QueryRunner): Promise<any> {
         await queryRunner.dropTable('appointment');
-        await queryRunner.dropTable('patient_permission');
-        await queryRunner.dropTable('staff_permission');
-        await queryRunner.dropTable('doctor_permission');
+
+
+
+        // await queryRunner.dropTable('permission');
+        // await queryRunner.dropTable('permissions');
+
+        await queryRunner.dropTable('users_appointment');
+        await queryRunner.dropTable('users_permission');
+
         await queryRunner.dropTable('permission');
+
+
         await queryRunner.dropTable('super_admin');
         await queryRunner.dropTable('patient');
         await queryRunner.dropTable('doctor');
         await queryRunner.dropTable('staff');
         await queryRunner.dropTable('user');
+        await queryRunner.dropTable('users');
+
+        await queryRunner.dropTable('permissions');
+        await queryRunner.dropTable('roles');
+
     }
 }

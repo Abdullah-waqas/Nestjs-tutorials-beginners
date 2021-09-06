@@ -1,5 +1,47 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { MinLength, IsNotEmpty, IsEmail } from 'class-validator';
+import { MinLength, IsNotEmpty, IsEnum } from 'class-validator';
+
+export enum UserRole {
+  PATIENT = 121,
+  DOCTOR = 131,
+  STAFF = 141,
+}
+
+export enum PermissionsEnum {
+  CREATE_APPOINTMENT = '122',
+  UPDATE_APPOINTMENT = '132',
+  VIEW_APPOINTMENT = '142',
+  DELETE_APPOINTMENT = '152'
+}
+export class RegisterUserDTO {
+
+  @ApiProperty()
+  @MinLength(4)
+  @IsNotEmpty()
+  firstName: string;
+
+  @ApiProperty()
+  @MinLength(4)
+  @IsNotEmpty()
+  lastName: string;
+
+  @ApiProperty()
+  @MinLength(4)
+  @IsNotEmpty()
+  address: string;
+
+  @ApiProperty()
+  @MinLength(8)
+  @IsNotEmpty()
+  password: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsEnum(UserRole)
+  @IsNotEmpty()
+  public roleId: UserRole;
+
+}
 
 export class LoginDTO {
 
@@ -69,34 +111,7 @@ export class RegisterAdminDTO {
   password: string;
 
 }
-
-
-export class RegisterDoctorDTO {
-
-  @ApiProperty()
-  @MinLength(4)
-  @IsNotEmpty()
-  firstName: string;
-
-  @ApiProperty()
-  @MinLength(4)
-  @IsNotEmpty()
-  lastName: string;
-
-  @ApiProperty()
-  @MinLength(4)
-  @IsNotEmpty()
-  address: string;
-
-  @ApiProperty()
-  @MinLength(8)
-  @IsNotEmpty()
-  password: string;
-
-}
-
-
-export class LoginDoctorDTO {
+export class LoginUserDTO {
 
   @ApiProperty()
   @MinLength(4)
@@ -114,91 +129,47 @@ export class LoginDoctorDTO {
   password: string;
 }
 
+export class ActivateUserParamDTO {
 
-export class RegisterStaffDTO {
-
-  @ApiProperty()
-  @MinLength(4)
   @IsNotEmpty()
-  firstName: string;
+  readonly userId: number;
+}
 
-  @ApiProperty()
-  @MinLength(4)
-  @IsNotEmpty()
-  lastName: string;
+export class AssignPermissionDTO {
 
-  @ApiProperty()
-  @MinLength(4)
   @IsNotEmpty()
-  address: string;
+  readonly userId: number;
 
-  @ApiProperty()
-  @MinLength(8)
   @IsNotEmpty()
-  password: string;
+  readonly permissionId: number;
 
 }
 
-
-export class LoginStaffDTO {
-
-  @ApiProperty()
-  @MinLength(4)
+export class CreateAppointmentDTO {
   @IsNotEmpty()
-  firstName: string;
+  readonly patientId: number;
 
-  @ApiProperty()
-  @MinLength(4)
   @IsNotEmpty()
-  lastName: string;
+  readonly doctorId: number;
 
-  @ApiProperty()
-  @MinLength(8)
   @IsNotEmpty()
-  password: string;
-}
+  readonly createdBy: number;
 
-
-
-export class RegisterPatientDTO {
-
-  @ApiProperty()
-  @MinLength(4)
   @IsNotEmpty()
-  firstName: string;
+  readonly appointmentStartDate: Date;
 
-  @ApiProperty()
-  @MinLength(4)
   @IsNotEmpty()
-  lastName: string;
-
-  @ApiProperty()
-  @MinLength(4)
-  @IsNotEmpty()
-  address: string;
-
-  @ApiProperty()
-  @MinLength(8)
-  @IsNotEmpty()
-  password: string;
+  readonly appointmentEndDate: Date;
 
 }
 
-
-export class LoginPatientDTO {
-
-  @ApiProperty()
-  @MinLength(4)
+export class UpdateAppointmentDTO extends CreateAppointmentDTO {
   @IsNotEmpty()
-  firstName: string;
+  readonly id: number;
+}
 
-  @ApiProperty()
-  @MinLength(4)
-  @IsNotEmpty()
-  lastName: string;
+export class DeleteAppointmentParamDTO {
 
-  @ApiProperty()
-  @MinLength(8)
   @IsNotEmpty()
-  password: string;
+  readonly appointmentId: number;
 }
